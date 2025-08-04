@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"elotus/cmd/authentication"
 	"elotus/cmd/dsa"
+	"elotus/cmd/upload"
 	"fmt"
 	"os"
 
@@ -25,7 +27,7 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.AddCommand(dsaCmd)
+	rootCmd.AddCommand(dsaCmd, authenticationServer, uploadServer)
 }
 
 var dsaCmd = &cobra.Command{
@@ -46,6 +48,7 @@ var authenticationServer = &cobra.Command{
 	Long:  `Authentication server,....`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("run authentication server")
+		authentication.NewAuthenticationServer().Run()
 	},
 }
 
@@ -55,5 +58,6 @@ var uploadServer = &cobra.Command{
 	Long:  `Upload file server`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("run upload server")
+		upload.NewUploadServer().Run()
 	},
 }
