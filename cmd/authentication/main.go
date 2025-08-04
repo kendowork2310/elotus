@@ -9,7 +9,7 @@ import (
 
 const (
 	App        = "authentication"
-	ServerPort = "SERVER_PORT"
+	ServerPort = "AUTHEN_SERVER_PORT"
 	ServerMode = "SERVER_MODE"
 )
 
@@ -33,7 +33,12 @@ func (s *AuthenticationServer) Run() {
 }
 
 func (s *AuthenticationServer) route() {
-	_ = handlers.NewHandler()
+	handler := handlers.NewHandler()
+	v1 := s.srv.Route.Group("/v1")
+	{
+		v1.POST("/register", handler.Register)
+		v1.POST("/login", handler.Login)
+	}
 }
 
 func newServerConfiguration() *server.HTTPServerConfiguration {

@@ -16,15 +16,28 @@ const (
 	ErrMsgNotFound       = "Not Found"
 	ErrInternalServer    = 500_101
 	ErrMsgInternalServer = "Internal Server Error"
+
+	// Authentication specific errors
+	ErrUsernameExists    = 400_102
+	ErrMsgUsernameExists = "Username already exists"
+
+	ErrInvalidCredentials    = 401_103
+	ErrMsgInvalidCredentials = "Invalid credentials"
+
+	ErrTokenAlreadyRevoked    = 400_103
+	ErrMsgTokenAlreadyRevoked = "Token already revoked"
 )
 
 var ErrService = map[int]string{
-	ErrBadRequest:     ErrMsgBadRequest,
-	ErrForbidden:      ErrMsgForbidden,
-	ErrNotFound:       ErrMsgNotFound,
-	ErrInternalServer: ErrMsgInternalServer,
-	ErrUnauthorized:   ErrMsgUnauthorized,
-	ErrInvalidToken:   ErrMsgInvalidToken,
+	ErrBadRequest:          ErrMsgBadRequest,
+	ErrForbidden:           ErrMsgForbidden,
+	ErrNotFound:            ErrMsgNotFound,
+	ErrInternalServer:      ErrMsgInternalServer,
+	ErrUnauthorized:        ErrMsgUnauthorized,
+	ErrInvalidToken:        ErrMsgInvalidToken,
+	ErrUsernameExists:      ErrMsgUsernameExists,
+	ErrInvalidCredentials:  ErrMsgInvalidCredentials,
+	ErrTokenAlreadyRevoked: ErrMsgTokenAlreadyRevoked,
 }
 
 type CustomError struct {
