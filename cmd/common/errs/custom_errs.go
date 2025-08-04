@@ -7,8 +7,10 @@ const (
 	ErrUnauthorized    = 401_101
 	ErrMsgUnauthorized = "Unauthorized"
 
-	ErrForbidden    = 403_101
-	ErrMsgForbidden = "Forbidden"
+	ErrInvalidToken    = 401_102
+	ErrMsgInvalidToken = "Invalid Token"
+	ErrForbidden       = 403_101
+	ErrMsgForbidden    = "Forbidden"
 
 	ErrNotFound          = 404_101
 	ErrMsgNotFound       = "Not Found"
@@ -16,12 +18,13 @@ const (
 	ErrMsgInternalServer = "Internal Server Error"
 )
 
-var ErrAPIService = map[int]string{
+var ErrService = map[int]string{
 	ErrBadRequest:     ErrMsgBadRequest,
 	ErrForbidden:      ErrMsgForbidden,
 	ErrNotFound:       ErrMsgNotFound,
 	ErrInternalServer: ErrMsgInternalServer,
 	ErrUnauthorized:   ErrMsgUnauthorized,
+	ErrInvalidToken:   ErrMsgInvalidToken,
 }
 
 type CustomError struct {
@@ -46,7 +49,7 @@ func NewCustomErrWithMsg(code int, errMsg string) *CustomError {
 // NewCustomError return instance which construct from code, and message was got from defined constant
 // if code doesn't define, it returns default value
 func NewCustomError(code int) *CustomError {
-	msg, ok := ErrAPIService[code]
+	msg, ok := ErrService[code]
 	if !ok {
 		msg = ErrMsgInternalServer
 		code = ErrInternalServer
