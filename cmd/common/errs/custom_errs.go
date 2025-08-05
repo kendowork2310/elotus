@@ -26,6 +26,16 @@ const (
 
 	ErrTokenAlreadyRevoked    = 400_103
 	ErrMsgTokenAlreadyRevoked = "Token already revoked"
+
+	// Upload specific errors
+	ErrFileTooLarge    = 400_104
+	ErrMsgFileTooLarge = "File size exceeds 8MB limit"
+
+	ErrInvalidFileType    = 400_105
+	ErrMsgInvalidFileType = "Only image files are allowed"
+
+	ErrFileProcessing    = 500_102
+	ErrMsgFileProcessing = "Failed to process uploaded file"
 )
 
 var ErrService = map[int]string{
@@ -38,6 +48,9 @@ var ErrService = map[int]string{
 	ErrUsernameExists:      ErrMsgUsernameExists,
 	ErrInvalidCredentials:  ErrMsgInvalidCredentials,
 	ErrTokenAlreadyRevoked: ErrMsgTokenAlreadyRevoked,
+	ErrFileTooLarge:        ErrMsgFileTooLarge,
+	ErrInvalidFileType:     ErrMsgInvalidFileType,
+	ErrFileProcessing:      ErrMsgFileProcessing,
 }
 
 type CustomError struct {

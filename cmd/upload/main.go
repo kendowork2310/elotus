@@ -33,7 +33,13 @@ func (s *UploadServer) Run() {
 }
 
 func (s *UploadServer) route() {
-	_ = handlers.NewHandler()
+	handler := handlers.NewHandler()
+
+	// Upload routes with authentication middleware
+	v1 := s.srv.Route.Group("/v1")
+	{
+		v1.POST("/upload", handler.UploadFile)
+	}
 }
 
 func newServerConfiguration() *server.HTTPServerConfiguration {
