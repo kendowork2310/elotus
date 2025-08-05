@@ -2,6 +2,7 @@ package upload
 
 import (
 	"elotus/cmd/upload/handlers"
+	"elotus/cmd/upload/middleware"
 	"elotus/pkg/cfg"
 	"elotus/pkg/server"
 	"fmt"
@@ -34,8 +35,8 @@ func (s *UploadServer) Run() {
 
 func (s *UploadServer) route() {
 	handler := handlers.NewHandler()
-
 	// Upload routes with authentication middleware
+	s.srv.Route.Use(middleware.TokenAuthentication())
 	v1 := s.srv.Route.Group("/v1")
 	{
 		v1.POST("/upload", handler.UploadFile)

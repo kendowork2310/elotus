@@ -38,6 +38,7 @@ func (s *AuthenticationServer) route() {
 	{
 		v1.POST("/register", handler.Register)
 		v1.POST("/login", handler.Login)
+		v1.POST("/refresh", handler.RefreshToken)
 	}
 }
 

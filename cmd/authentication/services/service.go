@@ -13,7 +13,8 @@ import (
 
 type ServiceAuthen interface {
 	Register(username, password string) error
-	Login(username, password string) (string, error)
+	Login(username, password string) (*jwt.TokenPair, error)
+	RefreshToken(refreshToken string) (string, error)
 }
 
 type service struct {
@@ -51,27 +52,37 @@ func (s *service) Register(username, password string) error {
 	return s.repo.CreateUser(user)
 }
 
-func (s *service) Login(username, password string) (string, error) {
+func (s *service) Login(username, password string) (*jwt.TokenPair, error) {
 	// Get user by username
 	user, err := s.repo.GetUserByUsername(username)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return "", errs.NewCustomError(errs.ErrInvalidCredentials)
+			return nil, errs.NewCustomError(errs.ErrInvalidCredentials)
 		}
-		return "", err
+		return nil, err
 	}
 
 	// Check password
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", errs.NewCustomError(errs.ErrInvalidCredentials)
+		return nil, errs.NewCustomError(errs.ErrInvalidCredentials)
 	}
 
-	// Generate JWT token
-	token, err := jwt.GenerateToken(user.Username)
+	// Generate JWT token pair
+	tokenPair, err := jwt.GenerateTokenPair(user.Username)
 	if err != nil {
-		return "", errs.NewCustomError(errs.ErrInternalServer)
+		return nil, errs.NewCustomError(errs.ErrInternalServer)
 	}
 
-	return token, nil
+	return tokenPair, nil
+}
+
+func (s *service) RefreshToken(refreshToken string) (string, error) {
+	// Generate new access token using refresh token
+	newAccessToken, err := jwt.RefreshAccessToken(refreshToken)
+	if err != nil {
+		return "", errs.NewCustomError(errs.ErrInvalidToken)
+	}
+
+	return newAccessToken, nil
 }
