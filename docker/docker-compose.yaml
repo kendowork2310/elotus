@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: elotus
+      MYSQL_DATABASE: elotus
+      MYSQL_USER: elotus
+      MYSQL_PASSWORD: elotus
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - elotus-network
+
+  authentication:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: authentication-server
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - MYSQL_URI=mysql:3306
+      - MYSQL_DATABASE=elotus
+      - MYSQL_USERNAME=elotus
+      - MYSQL_PASSWORD=elotus
+      - MYSQL_MAX_CONNECTION=10
+      - AUTHEN_SERVER_PORT=8080
+      - SERVER_MODE=debug
+      - JWT_SECRET_KEY=toilaken
+      - JWT_REFRESH_SECRET_KEY=refresh_toilaken
+    depends_on:
+      - mysql
+    networks:
+      - elotus-network
+    command: ["./elotus", "authentication"]
+
+  upload:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: upload-server
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - MYSQL_URI=mysql:3306
+      - MYSQL_DATABASE=elotus
+      - MYSQL_USERNAME=elotus
+      - MYSQL_PASSWORD=elotus
+      - MYSQL_MAX_CONNECTION=10
+      - UPLOAD_SERVER_PORT=8081
+      - SERVER_MODE=debug
+      - JWT_SECRET_KEY=toilaken
+      - JWT_REFRESH_SECRET_KEY=refresh_toilaken
+    depends_on:
+      - mysql
+    networks:
+      - elotus-network
+    command: ["./elotus", "upload"]
+
+volumes:
+  mysql_data:
+
+networks:
+  elotus-network:
+    driver: bridge
