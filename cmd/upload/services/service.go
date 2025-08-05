@@ -43,7 +43,7 @@ func (s *service) UploadFile(file *multipart.FileHeader, username string, userAg
 	}
 
 	// Create temporary file
-	tempFile, err := os.CreateTemp("/tmp", "upload-*"+file.Filename)
+	tempFile, err := os.CreateTemp("/tmp", "upload-*")
 	if err != nil {
 		return nil, errs.NewCustomErrWithMsg(errs.ErrFileProcessing, fmt.Sprintf("failed to create temp file: %v", err))
 	}
