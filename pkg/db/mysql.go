@@ -49,11 +49,7 @@ func NewMySQLClient() *gorm.DB {
 
 	db, _ := engine.DB()
 
-	max := cfg.Reader().MustGetInt(MySQLMaxConnection)
-	if max == 0 {
-		max = 8
-	}
-
+	max := cfg.Reader().GetIntWithDefault(MySQLMaxConnection, 8)
 	db.SetMaxOpenConns(max)
 	db.SetConnMaxIdleTime(2 * time.Minute)
 	db.SetConnMaxLifetime(time.Hour)

@@ -45,7 +45,7 @@ func (s *AuthenticationServer) route() {
 func newServerConfiguration() *server.HTTPServerConfiguration {
 	return &server.HTTPServerConfiguration{
 		Port: cfg.Reader().MustGetString(ServerPort),
-		Mode: cfg.Reader().MustGetString(ServerMode),
+		Mode: cfg.Reader().GetStringWithDefault(ServerMode, "debug"),
 		App:  fmt.Sprintf("%s", App),
 	}
 }

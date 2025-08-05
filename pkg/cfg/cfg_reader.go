@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/spf13/viper"
 	"sync"
+
+	"github.com/spf13/viper"
 )
 
 var once sync.Once
@@ -32,6 +33,17 @@ func Reader() ConfigReader {
 	once.Do(func() {
 		v := viper.New()
 		v.AutomaticEnv()
+
+		// Set config file name
+		v.SetConfigName("config")
+		v.SetConfigType("yaml")
+		v.AddConfigPath(".")
+
+		// Read config file if it exists
+		if err := v.ReadInConfig(); err != nil {
+			fmt.Printf("Warning: Could not read config.yaml file: %v\n", err)
+		}
+
 		cfgReader = &configReader{
 			v: v,
 		}
